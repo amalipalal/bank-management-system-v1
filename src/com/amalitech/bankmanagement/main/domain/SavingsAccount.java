@@ -2,8 +2,9 @@ package com.amalitech.bankmanagement.main.domain;
 
 import com.amalitech.bankmanagement.main.base.Account;
 import com.amalitech.bankmanagement.main.base.Customer;
+import com.amalitech.bankmanagement.main.interfaces.Transactable;
 
-public class SavingsAccount extends Account {
+public class SavingsAccount extends Account implements Transactable {
     private final double interestRate;
     private final double minimumBalance;
 
@@ -16,6 +17,24 @@ public class SavingsAccount extends Account {
     @Override
     public String displayAccountDetails() {
         return "";
+    }
+
+    @Override
+    public boolean processTransaction(double amount, String type) {
+        if(amount <= 0) return false;
+
+        switch (type.toLowerCase()) {
+            case "deposit":
+                super.deposit(amount);
+                break;
+            case "withdraw":
+                withdraw(amount);
+                break;
+            default:
+                return false;
+        }
+
+        return true;
     }
 
     @Override
