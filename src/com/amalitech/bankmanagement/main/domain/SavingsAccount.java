@@ -8,8 +8,8 @@ public class SavingsAccount extends Account implements Transactable {
     private final double interestRate;
     private final double minimumBalance;
 
-    public SavingsAccount(String accountNumber, Customer customer, double balance, String status) {
-        super(accountNumber, customer, balance, status);
+    public SavingsAccount(Customer customer, double balance, String status) {
+        super(customer, balance, status);
         this.interestRate = 0.035;
         this.minimumBalance = 500;
     }

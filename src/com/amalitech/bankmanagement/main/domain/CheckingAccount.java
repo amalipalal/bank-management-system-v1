@@ -8,8 +8,8 @@ public class CheckingAccount extends Account implements Transactable {
     private final double overDraftLimit;
     private final double monthlyFee;
 
-    public CheckingAccount(String accountNumber, Customer customer, double balance, String status) {
-        super(accountNumber, customer, balance, status);
+    public CheckingAccount(Customer customer, double balance, String status) {
+        super(customer, balance, status);
         this.overDraftLimit = 1000;
         this.monthlyFee = 10;
     }
