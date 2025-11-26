@@ -1,19 +1,27 @@
 package com.amalitech.bankmanagement.main.base;
 
+import java.text.DecimalFormat;
+
 public abstract class Account {
+    private static final DecimalFormat FORMATTER = new DecimalFormat("000");
     private final String accountNumber;
     private final Customer customer;
     private double balance;
     private final String status;
     private static int accountCounter = 0;
 
-    public Account(String accountNumber, Customer customer, double balance, String status) {
-        this.accountNumber = accountNumber;
+    public Account(Customer customer, double balance, String status) {
+        this.accountNumber = generateAccountNumber();
         this.customer = customer;
         this.balance = balance;
         this.status = status;
 
         increaseAccountCount();
+    }
+
+    private String generateAccountNumber() {
+        String idString = FORMATTER.format(Account.accountCounter);
+        return "ACC" + idString;
     }
 
     private void increaseAccountCount() {
