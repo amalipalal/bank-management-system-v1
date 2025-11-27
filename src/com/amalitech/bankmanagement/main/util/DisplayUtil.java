@@ -6,7 +6,13 @@ import com.amalitech.bankmanagement.main.domain.CheckingAccount;
 import com.amalitech.bankmanagement.main.domain.SavingsAccount;
 import com.amalitech.bankmanagement.main.domain.Transaction;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class DisplayUtil {
+    private static final int DISPLAY_STROKE_LENGTH = 59;
 
     public static void displayNewSavingsAccount(SavingsAccount account) {
         Customer customer = account.getCustomer();
@@ -15,9 +21,9 @@ public class DisplayUtil {
         System.out.println("Account Number: " + account.getAccountNumber());
         System.out.println("Customer: " + customer.getName() + " (" + customer.getCustomerType() + ")");
         System.out.println("Account Type: " + account.getAccountType());
-        System.out.println("Initial Balance: $" + String.format("%,.2f", account.getBalance()));
-        System.out.println("Interest Rate: " + String.format("%.1f%%", interestPercentage));
-        System.out.println("Minimum Balance: $" + String.format("%,.2f", account.getBalance()));
+        System.out.println("Initial Balance: " + displayAmount(account.getBalance()));
+        System.out.println("Interest Rate: " + displayDecimal(interestPercentage));
+        System.out.println("Minimum Balance: " + displayAmount(account.getMinimumBalance()));
         System.out.println("Status: " + account.getStatus());
     }
 
@@ -35,10 +41,9 @@ public class DisplayUtil {
         System.out.println("Account Number: " + account.getAccountNumber());
         System.out.println("Customer: " + customer.getName() + " (" + customer.getCustomerType() + ")");
         System.out.println("Account Type: " + account.getAccountType());
-        System.out.println("Initial Balance: $" + String.format("%,.2f", account.getBalance()));
-        System.out.println("Overdraft Limit: " + String.format("%,.2f", account.getOverDraftLimit()));
-        System.out.println("Minimum Balance: $" + String.format("%,.2f", account.getBalance()));
-        System.out.println("Monthly Fee: $" + account.getMonthlyFee() + " (" + "WAIVED - " + customer.getCustomerType() + " Customer");
+        System.out.println("Initial Balance: " + displayAmount(account.getBalance()));
+        System.out.println("Overdraft Limit: " + displayAmount(account.getOverDraftLimit()));
+        System.out.println("Monthly Fee: " + displayAmount(account.getMonthlyFee()) + " (" + "WAIVED - " + customer.getCustomerType() + " Customer");
         System.out.println("Status: " + account.getStatus());
     }
 
@@ -47,7 +52,7 @@ public class DisplayUtil {
 
         System.out.println("Customer: " + customer.getName());
         System.out.println("Account type: " + account.getAccountType());
-        System.out.println("Current Balance: " + String.format("%,.2f", account.getBalance()));
+        System.out.println("Current Balance: " + displayAmount(account.getBalance()));
     }
 
     public static void displayTransaction(Transaction transaction) {
