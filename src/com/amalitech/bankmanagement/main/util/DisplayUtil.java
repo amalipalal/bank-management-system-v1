@@ -42,4 +42,53 @@ public class DisplayUtil {
         System.out.println("Current Balance: " + String.format("%,.2f", account.getBalance()));
     }
 
+    public static void displayTransaction(Transaction transaction) {
+        double previousAccountBalance = transaction.getBalanceAfter() - transaction.getAmount();
+
+        System.out.println("Transaction ID: " + transaction.getTransactionId());
+        System.out.println("Account: " + transaction.getAccountNumber());
+        System.out.println("Type: " + transaction.getTransactionType());
+        System.out.println("Amount: " + transaction.getAmount());
+        System.out.println("Previous Balance: " + displayAmount(previousAccountBalance));
+        System.out.println("New Balance: " + displayAmount(transaction.getBalanceAfter()));
+        System.out.println("Date/Time: " + displayTimestamp(transaction.getTimestamp()));
+    }
+
+    public static void displayMultipleTransactions(Transaction[] transactions) {
+        String columnFormat = "| %-15s | %-20s | %-10s | %-15s | %-15s |%n";
+
+        System.out.println("-".repeat(DISPLAY_STROKE_LENGTH));
+        System.out.printf(columnFormat, "TXN ID", "DATE/TIME", "TYPE", "AMOUNT", "BALANCE");
+        System.out.println("-".repeat(DISPLAY_STROKE_LENGTH));
+
+        for (Transaction transaction : transactions) {
+            String dateTime = displayTimestamp(transaction.getTimestamp());
+            String type = transaction.getTransactionType();
+
+            String amountSign = type.equalsIgnoreCase("Deposit") ? "+" : "-";
+            String amount = amountSign + displayAmount(transaction.getAmount());
+            String balance = displayAmount(transaction.getBalanceAfter());
+
+            System.out.printf(columnFormat, transaction.getTransactionId(), dateTime, type, amount, balance);
+            System.out.println("-".repeat(DISPLAY_STROKE_LENGTH));
+        }
+    }
+
+    private static String displayTimestamp(String timestamp) {
+        Instant instant = Instant.parse(timestamp);
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-mm-yyyy hh:mm a");
+        ZonedDateTime localDateTime = instant.atZone(ZoneId.systemDefault());
+        return localDateTime.format(dateTimeFormatter);
+    }
+
+    public static void displayNotice(String message) {
+        System.out.println("-".repeat(DISPLAY_STROKE_LENGTH));
+        System.out.println(message);
+        System.out.println("-".repeat(DISPLAY_STROKE_LENGTH));
+    }
+
+    public static  void displayHeading(String title) {
+        System.out.println(title.toUpperCase());
+        System.out.println("-".repeat(DISPLAY_STROKE_LENGTH));
+    }
 }
