@@ -27,12 +27,16 @@ public class DisplayUtil {
         float interestPercentage = (float) account.getInterestRate() * 100;
 
         System.out.println("Account Number: " + account.getAccountNumber());
-        System.out.println("Customer: " + customer.getName() + " (" + customer.getCustomerType() + ")");
+        System.out.println("Customer: " + displayCustomerDetails(customer));
         System.out.println("Account Type: " + account.getAccountType());
         System.out.println("Initial Balance: " + displayAmount(account.getBalance()));
         System.out.println("Interest Rate: " + displayDecimal(interestPercentage));
         System.out.println("Minimum Balance: " + displayAmount(account.getMinimumBalance()));
         System.out.println("Status: " + account.getStatus());
+    }
+
+    private static String displayCustomerDetails(Customer customer) {
+        return customer.getName() + " (" + customer.getCustomerType() + ")";
     }
 
     public static String displayAmount(double amount) {
@@ -45,13 +49,14 @@ public class DisplayUtil {
 
     public static void displayNewCheckingAccount(CheckingAccount account) {
         Customer customer = account.getCustomer();
+        String monthlyFeeMetadata = " (" + "WAIVED - " + customer.getCustomerType() + " Customer )";
 
         System.out.println("Account Number: " + account.getAccountNumber());
-        System.out.println("Customer: " + customer.getName() + " (" + customer.getCustomerType() + ")");
+        System.out.println("Customer: " + displayCustomerDetails(customer));
         System.out.println("Account Type: " + account.getAccountType());
         System.out.println("Initial Balance: " + displayAmount(account.getBalance()));
         System.out.println("Overdraft Limit: " + displayAmount(account.getOverDraftLimit()));
-        System.out.println("Monthly Fee: " + displayAmount(account.getMonthlyFee()) + " (" + "WAIVED - " + customer.getCustomerType() + " Customer");
+        System.out.println("Monthly Fee: " + displayAmount(account.getMonthlyFee()) + monthlyFeeMetadata);
         System.out.println("Status: " + account.getStatus());
     }
 
