@@ -61,6 +61,10 @@ public class BankingService {
         return transactionManager.calculateTotalWithdrawals(accountNumber);
     }
 
+    public double getTotalBankBalance() {
+        return accountManager.getTotalBalance();
+    }
+
     public int getAccountCount() {
         return accountManager.getAccountCount();
     }
