@@ -20,6 +20,7 @@ public class DisplayUtil {
         System.out.println("3. Process Transaction");
         System.out.println("4. View Transaction History");
         System.out.println("5. Exit");
+        System.out.println();
     }
 
     public static void displayNewSavingsAccount(SavingsAccount account) {
@@ -57,7 +58,11 @@ public class DisplayUtil {
         System.out.println("Initial Balance: " + displayAmount(account.getBalance()));
         System.out.println("Overdraft Limit: " + displayAmount(account.getOverDraftLimit()));
         System.out.println("Monthly Fee: " + displayAmount(account.getMonthlyFee()) + monthlyFeeMetadata);
-        System.out.println("Status: " + account.getStatus());
+        System.out.println("Status: " + formatStatus(account.getStatus()));
+    }
+
+    private static String formatStatus(String status) {
+        return status.substring(0, 1).toUpperCase() + status.substring(1);
     }
 
     public static void displayAccountDetails(Account account) {
@@ -159,6 +164,7 @@ public class DisplayUtil {
         System.out.println("-".repeat(DISPLAY_STROKE_LENGTH));
         System.out.println(message);
         System.out.println("-".repeat(DISPLAY_STROKE_LENGTH));
+        System.out.println();
     }
 
     public static  void displayHeading(String title) {
