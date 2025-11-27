@@ -20,8 +20,7 @@ public class Main {
         while(userIsActive) {
             DisplayUtil.displayMainMenu();
 
-            System.out.print("Enter Choice: ");
-            int userSelection = Integer.parseInt(scanner.nextLine());
+            int userSelection = readInt(scanner, "Select an option (1-5)", 1, 5);
             System.out.println();
 
             switch(userSelection) {
