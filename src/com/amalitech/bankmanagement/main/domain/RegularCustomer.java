@@ -1,4 +1,20 @@
 package com.amalitech.bankmanagement.main.domain;
 
-public class RegularCustomer {
+import com.amalitech.bankmanagement.main.base.Customer;
+
+public class RegularCustomer extends Customer {
+
+    public RegularCustomer(String name, int age, String contact, String address) {
+        super(name, age, contact, address);
+    }
+
+    @Override
+    public String displayCustomerDetails() {
+        return "";
+    }
+
+    @Override
+    public String getCustomerType() {
+        return "Regular";
+    }
 }
