@@ -21,6 +21,14 @@ public class DisplayUtil {
         System.out.println("Status: " + account.getStatus());
     }
 
+    private static String displayAmount(double amount) {
+        return String.format("$%,.2f", amount);
+    }
+
+    private static String displayDecimal(double decimal) {
+        return String.format("%.1f%%", decimal);
+    }
+
     public static void displayNewCheckingAccount(CheckingAccount account) {
         Customer customer = account.getCustomer();
 
