@@ -14,6 +14,14 @@ import java.time.format.DateTimeFormatter;
 public class DisplayUtil {
     private static final int DISPLAY_STROKE_LENGTH = 59;
 
+    public static void displayMainMenu() {
+        System.out.println("1. Create Account");
+        System.out.println("2. View Accounts");
+        System.out.println("3. Process Transaction");
+        System.out.println("4. View Transaction History");
+        System.out.println("5. Exit");
+    }
+
     public static void displayNewSavingsAccount(SavingsAccount account) {
         Customer customer = account.getCustomer();
         float interestPercentage = (float) account.getInterestRate() * 100;
