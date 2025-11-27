@@ -28,6 +28,9 @@ public class Main {
                 case 1:
                     handleAccountCreationFlow(scanner, bankingService);
                     break;
+                case 2:
+                    handleAccountListingFlow(scanner, bankingService);
+                    break;
                 case 5:
                     userIsActive = false;
                     break;
@@ -153,5 +156,20 @@ public class Main {
 
             System.out.println("Input cannot be empty");
         }
+    }
+
+    public static void handleAccountListingFlow(Scanner scanner, BankingService service) {
+        System.out.println("ACCOUNT LISTING");
+
+        Account[] allAccounts = service.viewAllAccounts();
+        double totalBalance = service.getTotalBankBalance();
+
+        DisplayUtil.displayAccountListing(allAccounts);
+
+        System.out.println();
+
+        System.out.println("Total Accounts: " + allAccounts.length);
+        System.out.println("Total Bank Balance: " + DisplayUtil.displayAmount(totalBalance));
+        System.out.println();
     }
 }
