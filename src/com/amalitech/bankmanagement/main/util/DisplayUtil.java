@@ -27,7 +27,7 @@ public class DisplayUtil {
         System.out.println("Status: " + account.getStatus());
     }
 
-    private static String displayAmount(double amount) {
+    public static String displayAmount(double amount) {
         return String.format("$%,.2f", amount);
     }
 
@@ -137,7 +137,7 @@ public class DisplayUtil {
 
     private static String displayTimestamp(String timestamp) {
         Instant instant = Instant.parse(timestamp);
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-mm-yyyy hh:mm a");
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm a");
         ZonedDateTime localDateTime = instant.atZone(ZoneId.systemDefault());
         return localDateTime.format(dateTimeFormatter);
     }
