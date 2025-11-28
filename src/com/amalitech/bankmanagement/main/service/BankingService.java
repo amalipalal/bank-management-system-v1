@@ -29,7 +29,11 @@ public class BankingService {
 
     public boolean confirmTransaction(Account account, Transaction transaction) {
         transactionManager.addTransaction(transaction);
-        account.deposit(transaction.getAmount());
+        if ("withdraw".equals(transaction.getTransactionType())) {
+            account.withdraw(transaction.getAmount());
+        } else {
+            account.deposit(transaction.getAmount());
+        }
         return true;
     }
 
