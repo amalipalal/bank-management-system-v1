@@ -1,7 +1,3 @@
-Here’s a **minimal, design-oriented README.md draft** for your project:
-
-***
-
 # Banking System Terminal Application
 
 ## **Overview**
@@ -25,6 +21,9 @@ A Java-based terminal banking application that simulates core banking operations
     *   `Transaction`: Represents deposits and withdrawals.
 *   **Utility Layer**:
     *   `DisplayUtil`: Formats and displays data in tables.
+
+### **Class Diagram**
+![fullClassDiagram.jpg](fullClassDiagram.jpg)
 
 ## **Features**
 
