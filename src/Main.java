@@ -15,29 +15,33 @@ public class Main {
         boolean userIsActive = true;
 
         while(userIsActive) {
-            DisplayUtil.displayMainMenu();
+            try {
+                DisplayUtil.displayMainMenu();
 
-            int userSelection = readInt(scanner, "Select an option (1-5)", 1, 5);
-            System.out.println();
+                int userSelection = readInt(scanner, "Select an option (1-5)", 1, 5);
+                System.out.println();
 
-            switch(userSelection) {
-                case 1:
-                    handleAccountCreationFlow(scanner, bankingService);
-                    break;
-                case 2:
-                    handleAccountListingFlow(scanner, bankingService);
-                    break;
-                case 3:
-                    handleTransactionFlow(scanner, bankingService);
-                    break;
-                case 4:
-                    handleTransactionListingFlow(scanner, bankingService);
-                    break;
-                case 5:
-                    userIsActive = false;
-                    break;
-                default:
-                    DisplayUtil.displayNotice("Wrong number selection");
+                switch(userSelection) {
+                    case 1:
+                        handleAccountCreationFlow(scanner, bankingService);
+                        break;
+                    case 2:
+                        handleAccountListingFlow(scanner, bankingService);
+                        break;
+                    case 3:
+                        handleTransactionFlow(scanner, bankingService);
+                        break;
+                    case 4:
+                        handleTransactionListingFlow(scanner, bankingService);
+                        break;
+                    case 5:
+                        userIsActive = false;
+                        break;
+                    default:
+                        DisplayUtil.displayNotice("Wrong number selection");
+                }
+            } catch (Exception e) {
+                DisplayUtil.displayNotice(e.getMessage());
             }
         }
     }
