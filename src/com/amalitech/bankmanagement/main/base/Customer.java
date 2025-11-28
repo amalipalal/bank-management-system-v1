@@ -31,7 +31,7 @@ public abstract class Customer {
     }
 
     private String generateCustomerId() {
-        return "CUST" + customerCounter;
+        return "CUS" + customerCounter;
     }
 
     public String getCustomerId() {
