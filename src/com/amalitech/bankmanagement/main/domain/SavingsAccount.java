@@ -44,13 +44,11 @@ public class SavingsAccount extends Account implements Transactable {
 
         double currentAccountBalance = super.getBalance();
 
-        if(currentAccountBalance <= MINIMUM_BALANCE) {
-            throw new IllegalStateException("Withdrawal not allowed: balance is at minimum");
-        }
-
         double newAccountBalance = currentAccountBalance - amount;
         if(newAccountBalance < 0) {
             throw new IllegalArgumentException("Withdrawal amount exceeds available balance");
+        } else if (newAccountBalance < MINIMUM_BALANCE) {
+            throw new IllegalStateException("Withdrawal not allowed: balance is at minimum");
         }
 
         super.setBalance(newAccountBalance);
