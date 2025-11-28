@@ -26,14 +26,14 @@ public class DisplayUtil {
 
     public static void displayNewSavingsAccount(SavingsAccount account) {
         Customer customer = account.getCustomer();
-        float interestPercentage = (float) account.getInterestRate() * 100;
+        float interestPercentage = (float) account.getINTEREST_RATE() * 100;
 
         System.out.println("Account Number: " + account.getAccountNumber());
         System.out.println("Customer: " + displayCustomerDetails(customer));
         System.out.println("Account Type: " + account.getAccountType());
         System.out.println("Initial Balance: " + displayAmount(account.getBalance()));
         System.out.println("Interest Rate: " + displayDecimal(interestPercentage));
-        System.out.println("Minimum Balance: " + displayAmount(account.getMinimumBalance()));
+        System.out.println("Minimum Balance: " + displayAmount(account.getMINIMUM_BALANCE()));
         System.out.println("Status: " + formatStatus(account.getStatus()));
     }
 
@@ -55,15 +55,24 @@ public class DisplayUtil {
 
     public static void displayNewCheckingAccount(CheckingAccount account) {
         Customer customer = account.getCustomer();
-        String monthlyFeeMetadata = " (" + "WAIVED - " + customer.getCustomerType() + " Customer )";
+        String monthlyFeeMetadata = generateMonthlyFeeMetadata(account);
 
         System.out.println("Account Number: " + account.getAccountNumber());
         System.out.println("Customer: " + displayCustomerDetails(customer));
         System.out.println("Account Type: " + account.getAccountType());
         System.out.println("Initial Balance: " + displayAmount(account.getBalance()));
-        System.out.println("Overdraft Limit: " + displayAmount(account.getOverDraftLimit()));
+        System.out.println("Overdraft Limit: " + displayAmount(account.getOVERDRAFT_LIMIT()));
         System.out.println("Monthly Fee: " + displayAmount(account.getMonthlyFee()) + monthlyFeeMetadata);
         System.out.println("Status: " + formatStatus(account.getStatus()));
+    }
+
+    private static String generateMonthlyFeeMetadata (CheckingAccount account) {
+        Customer customer = account.getCustomer();
+
+        if(account.getMonthlyFee() == 0)
+            return " (" + "WAIVED - " + customer.getCustomerType() + " Customer )";
+
+        return " (" + "NOT WAIVED - " + customer.getCustomerType() + " Customer )";
     }
 
     private static String formatStatus(String status) {
@@ -98,7 +107,7 @@ public class DisplayUtil {
 
     private static void displayCheckingAccountRow(CheckingAccount account, String columnFormat) {
         String accountNumber = account.getAccountNumber();
-        String overDraftLimit = displayAmount(account.getOverDraftLimit());
+        String overDraftLimit = displayAmount(account.getOVERDRAFT_LIMIT());
         String customerName = account.getCustomer().getName();
         String accountType = account.getAccountType();
         String monthlyFee = displayAmount(account.getMonthlyFee());
@@ -115,13 +124,13 @@ public class DisplayUtil {
     }
 
     private static void displaySavingsAccountRow(SavingsAccount account, String columnFormat) {
-        float interestPercentage = calculateInterestPercentage(account.getInterestRate());
+        float interestPercentage = calculateInterestPercentage(account.getINTEREST_RATE());
 
         String accountNumber = account.getAccountNumber();
         String interestRate = displayDecimal(interestPercentage);
         String customerName = account.getCustomer().getName();
         String accountType = account.getAccountType();
-        String minimumBalance = displayAmount(account.getMinimumBalance());
+        String minimumBalance = displayAmount(account.getMINIMUM_BALANCE());
         String balance = displayAmount(account.getBalance());
         String status = formatStatus(account.getStatus());
 
