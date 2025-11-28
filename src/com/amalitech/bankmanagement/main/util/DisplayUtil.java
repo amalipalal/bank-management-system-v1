@@ -12,9 +12,10 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class DisplayUtil {
-    private static final int DISPLAY_STROKE_LENGTH = 90;
+    private static final int DISPLAY_STROKE_LENGTH = 100;
 
     public static void displayMainMenu() {
+        System.out.println();
         System.out.println("1. Create Account");
         System.out.println("2. View Accounts");
         System.out.println("3. Process Transaction");
