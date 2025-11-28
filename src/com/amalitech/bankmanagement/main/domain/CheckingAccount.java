@@ -5,12 +5,11 @@ import com.amalitech.bankmanagement.main.base.Customer;
 import com.amalitech.bankmanagement.main.interfaces.Transactable;
 
 public class CheckingAccount extends Account implements Transactable {
-    private final double overDraftLimit;
-    private final double monthlyFee;
+    private final double OVERDRAFT_LIMIT = 1000;
+    private double monthlyFee;
 
     public CheckingAccount(Customer customer, double balance, String status) {
         super(customer, balance, status);
-        this.overDraftLimit = 1000;
         this.monthlyFee = 10;
     }
 
@@ -51,7 +50,7 @@ public class CheckingAccount extends Account implements Transactable {
         double currentAccountBalance = super.getBalance();
         double newAccountBalance = currentAccountBalance - amount;
 
-        if(newAccountBalance < -this.overDraftLimit) {
+        if(newAccountBalance < -this.OVERDRAFT_LIMIT) {
             throw new IllegalStateException("Withdrawal not allowed: overdraft limit is exceeded");
         }
 
@@ -60,17 +59,21 @@ public class CheckingAccount extends Account implements Transactable {
 
     public void applyMonthlyFee() {
         double newAccountBalance = super.getBalance() - this.monthlyFee;
-        if(newAccountBalance < -this.overDraftLimit) {
+        if(newAccountBalance < -this.OVERDRAFT_LIMIT) {
             throw new IllegalStateException("Monthly fee cannot be applied: overdraft limit exceeded");
         }
         super.setBalance(newAccountBalance);
     }
 
-    public double getOverDraftLimit() {
-        return this.overDraftLimit;
+    public double getOVERDRAFT_LIMIT() {
+        return this.OVERDRAFT_LIMIT;
     }
 
     public double getMonthlyFee() {
         return this.monthlyFee;
+    }
+
+    public void setMonthlyFee(double fee) {
+        this.monthlyFee = fee;
     }
 }
