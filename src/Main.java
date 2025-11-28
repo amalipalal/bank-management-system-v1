@@ -1,9 +1,6 @@
 import com.amalitech.bankmanagement.main.base.Account;
 import com.amalitech.bankmanagement.main.base.Customer;
-import com.amalitech.bankmanagement.main.domain.CheckingAccount;
-import com.amalitech.bankmanagement.main.domain.PremiumCustomer;
-import com.amalitech.bankmanagement.main.domain.RegularCustomer;
-import com.amalitech.bankmanagement.main.domain.SavingsAccount;
+import com.amalitech.bankmanagement.main.domain.*;
 import com.amalitech.bankmanagement.main.manager.AccountManager;
 import com.amalitech.bankmanagement.main.manager.TransactionManager;
 import com.amalitech.bankmanagement.main.service.BankingService;
@@ -29,6 +26,9 @@ public class Main {
                     break;
                 case 2:
                     handleAccountListingFlow(scanner, bankingService);
+                    break;
+                case 3:
+                    handleTransactionFlow(scanner, bankingService);
                     break;
                 case 5:
                     userIsActive = false;
@@ -171,4 +171,85 @@ public class Main {
         System.out.println("Total Bank Balance: " + DisplayUtil.displayAmount(totalBalance));
         System.out.println();
     }
+
+    public static void handleTransactionFlow(Scanner scanner, BankingService service) {
+        DisplayUtil.displayHeading("Process Transaction");
+
+        System.out.println();
+
+        Account customerAccount = handleAccountValidationFlow(scanner, service);
+
+        Transaction newTransaction = handleTransactionTypeFlow(scanner, service, customerAccount);
+
+        handleTransactionConfirmation(scanner, service, customerAccount, newTransaction);
+    }
+
+    private static Account handleAccountValidationFlow(Scanner scanner, BankingService service) {
+        String accountNumber = readNonEmptyString(scanner, "Enter Account Number");
+
+        Account customerAccount = service.getAccountByNumber(accountNumber);
+
+        System.out.println("Account Details:");
+        DisplayUtil.displayAccountDetails(customerAccount);
+
+        System.out.println();
+
+        return customerAccount;
+    }
+
+    private static Transaction handleTransactionTypeFlow(Scanner scanner, BankingService service, Account customerAccount) {
+        System.out.println("Transaction type:");
+        System.out.println("1. Deposit \n2. Withdrawal");
+        System.out.println();
+
+        int transactionType = readInt(scanner, "Select type (1-2)", 1, 2);
+
+        double transactionAmount = readDouble(scanner, "Enter amount", 0);
+
+        System.out.println();
+
+        return transactionType == 1
+                ? service.processDeposit(customerAccount, transactionAmount)
+                : service.processWithdrawal(customerAccount, transactionAmount);
+    }
+
+    private static void handleTransactionConfirmation(Scanner scanner, BankingService service, Account customerAccount, Transaction newTransaction) {
+        DisplayUtil.displayHeading("Transaction Confirmation");
+
+        DisplayUtil.displayTransaction(newTransaction);
+
+        System.out.println();
+
+        boolean isConfirmed = readYesOrNo(scanner, "Confirm transaction? (Y/N)");
+
+        if (isConfirmed) {
+            boolean isSuccessful = service.confirmTransaction(customerAccount, newTransaction);
+
+            if (isSuccessful) {
+                System.out.println("Transaction completed successful!");
+            } else {
+                System.out.println("Transaction failed. Please try again.");
+            }
+        } else {
+            System.out.println("Transaction not confirmed. Aborting.");
+        }
+    }
+
+    private static boolean readYesOrNo(Scanner scanner, String prompt) {
+        while (true) {
+            System.out.print(prompt + ": ");
+
+            String input = scanner.nextLine();
+
+            switch (input.toLowerCase()) {
+                case "y":
+                    return true;
+                case "n":
+                    return false;
+                default:
+                    System.out.println("Invalid input: Please enter Y or N.");
+            }
+        }
+    }
+
 }
