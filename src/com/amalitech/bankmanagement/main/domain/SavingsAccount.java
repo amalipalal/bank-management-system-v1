@@ -5,13 +5,11 @@ import com.amalitech.bankmanagement.main.base.Customer;
 import com.amalitech.bankmanagement.main.interfaces.Transactable;
 
 public class SavingsAccount extends Account implements Transactable {
-    private final double interestRate;
-    private final double minimumBalance;
+    private final double INTEREST_RATE = 0.035;
+    private final double MINIMUM_BALANCE = 500;
 
     public SavingsAccount(Customer customer, double balance, String status) {
         super(customer, balance, status);
-        this.interestRate = 0.035;
-        this.minimumBalance = 500;
     }
 
     @Override
@@ -46,7 +44,7 @@ public class SavingsAccount extends Account implements Transactable {
 
         double currentAccountBalance = super.getBalance();
 
-        if(currentAccountBalance < minimumBalance) {
+        if(currentAccountBalance <= MINIMUM_BALANCE) {
             throw new IllegalStateException("Withdrawal not allowed: balance is at minimum");
         }
 
@@ -59,18 +57,18 @@ public class SavingsAccount extends Account implements Transactable {
     }
 
     public double calculateInterest() {
-        return super.getBalance() * this.interestRate;
+        return super.getBalance() * this.INTEREST_RATE;
     }
 
     public String getAccountType() {
         return "Savings";
     }
 
-    public double getInterestRate() {
-        return this.interestRate;
+    public double getINTEREST_RATE() {
+        return this.INTEREST_RATE;
     }
 
-    public double getMinimumBalance() {
-        return this.minimumBalance;
+    public double getMINIMUM_BALANCE() {
+        return this.MINIMUM_BALANCE;
     }
 }
