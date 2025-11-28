@@ -12,7 +12,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class DisplayUtil {
-    private static final int DISPLAY_STROKE_LENGTH = 100;
+    private static final int DISPLAY_STROKE_LENGTH = 110;
 
     public static void displayMainMenu() {
         System.out.println();
@@ -135,15 +135,25 @@ public class DisplayUtil {
     }
 
     public static void displayTransaction(Transaction transaction) {
-        double previousAccountBalance = transaction.getBalanceAfter() - transaction.getAmount();
+        double previousAccountBalance = computePreviousBalance(transaction);
 
         System.out.println("Transaction ID: " + transaction.getTransactionId());
         System.out.println("Account: " + transaction.getAccountNumber());
         System.out.println("Type: " + transaction.getTransactionType());
-        System.out.println("Amount: " + transaction.getAmount());
+        System.out.println("Amount: " + displayAmount(transaction.getAmount()));
         System.out.println("Previous Balance: " + displayAmount(previousAccountBalance));
         System.out.println("New Balance: " + displayAmount(transaction.getBalanceAfter()));
         System.out.println("Date/Time: " + displayTimestamp(transaction.getTimestamp()));
+    }
+
+    private static double computePreviousBalance (Transaction transaction) {
+        if ("withdraw".equals(transaction.getTransactionType())) {
+            return transaction.getBalanceAfter() + transaction.getAmount();
+        } else if ("deposit".equals(transaction.getTransactionType())) {
+            return transaction.getBalanceAfter() - transaction.getAmount();
+        } else {
+            return 0;
+        }
     }
 
     public static void displayMultipleTransactions(Transaction[] transactions) {
@@ -155,7 +165,7 @@ public class DisplayUtil {
 
         for (Transaction transaction : transactions) {
             String dateTime = displayTimestamp(transaction.getTimestamp());
-            String type = transaction.getTransactionType();
+            String type = transaction.getTransactionType().toUpperCase();
 
             String amountSign = type.equalsIgnoreCase("Deposit") ? "+" : "-";
             String amount = amountSign + displayAmount(transaction.getAmount());
