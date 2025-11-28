@@ -3,6 +3,7 @@ package com.amalitech.bankmanagement.main.service;
 import com.amalitech.bankmanagement.main.base.Account;
 import com.amalitech.bankmanagement.main.base.Customer;
 import com.amalitech.bankmanagement.main.domain.CheckingAccount;
+import com.amalitech.bankmanagement.main.domain.PremiumCustomer;
 import com.amalitech.bankmanagement.main.domain.SavingsAccount;
 import com.amalitech.bankmanagement.main.domain.Transaction;
 import com.amalitech.bankmanagement.main.manager.AccountManager;
@@ -38,14 +39,18 @@ public class BankingService {
     }
 
     public Account createSavingsAccount(Customer customer, double initialDeposit) {
-        Account newAccount = new SavingsAccount(customer, initialDeposit, "active");
+        SavingsAccount newAccount = new SavingsAccount(customer, initialDeposit, "active");
         accountManager.addAccount(newAccount);
         return newAccount;
     }
 
     public Account createCheckingAccount(Customer customer, double initialDeposit) {
-        Account newAccount = new CheckingAccount(customer, initialDeposit, "active");
+        CheckingAccount newAccount = new CheckingAccount(customer, initialDeposit, "active");
+
+        if(customer instanceof PremiumCustomer) newAccount.setMonthlyFee(0);
+
         accountManager.addAccount(newAccount);
+
         return newAccount;
     }
 
