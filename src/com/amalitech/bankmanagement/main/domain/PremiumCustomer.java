@@ -15,7 +15,7 @@ public class PremiumCustomer extends Customer {
 
     @Override
     public String getCustomerType() {
-        return "PREMIUM";
+        return "Premium";
     }
 
 }

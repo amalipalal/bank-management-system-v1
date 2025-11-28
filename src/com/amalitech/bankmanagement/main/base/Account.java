@@ -11,12 +11,12 @@ public abstract class Account {
     private static int accountCounter = 0;
 
     public Account(Customer customer, double balance, String status) {
+        increaseAccountCount();
+
         this.accountNumber = generateAccountNumber();
         this.customer = customer;
         this.balance = balance;
         this.status = status;
-
-        increaseAccountCount();
     }
 
     private String generateAccountNumber() {

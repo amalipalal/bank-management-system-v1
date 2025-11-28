@@ -12,14 +12,16 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class DisplayUtil {
-    private static final int DISPLAY_STROKE_LENGTH = 59;
+    private static final int DISPLAY_STROKE_LENGTH = 110;
 
     public static void displayMainMenu() {
+        System.out.println();
         System.out.println("1. Create Account");
         System.out.println("2. View Accounts");
         System.out.println("3. Process Transaction");
         System.out.println("4. View Transaction History");
         System.out.println("5. Exit");
+        System.out.println();
     }
 
     public static void displayNewSavingsAccount(SavingsAccount account) {
@@ -32,7 +34,11 @@ public class DisplayUtil {
         System.out.println("Initial Balance: " + displayAmount(account.getBalance()));
         System.out.println("Interest Rate: " + displayDecimal(interestPercentage));
         System.out.println("Minimum Balance: " + displayAmount(account.getMinimumBalance()));
-        System.out.println("Status: " + account.getStatus());
+        System.out.println("Status: " + formatStatus(account.getStatus()));
+    }
+
+    private static float calculateInterestPercentage(double interestRate) {
+        return (float) interestRate * 100;
     }
 
     private static String displayCustomerDetails(Customer customer) {
@@ -57,7 +63,11 @@ public class DisplayUtil {
         System.out.println("Initial Balance: " + displayAmount(account.getBalance()));
         System.out.println("Overdraft Limit: " + displayAmount(account.getOverDraftLimit()));
         System.out.println("Monthly Fee: " + displayAmount(account.getMonthlyFee()) + monthlyFeeMetadata);
-        System.out.println("Status: " + account.getStatus());
+        System.out.println("Status: " + formatStatus(account.getStatus()));
+    }
+
+    private static String formatStatus(String status) {
+        return status.substring(0, 1).toUpperCase() + status.substring(1);
     }
 
     public static void displayAccountDetails(Account account) {
@@ -69,7 +79,7 @@ public class DisplayUtil {
     }
 
     public static void displayAccountListing(Account[] accounts) {
-        String columnFormat = "| %-15s | %-25s | %-10s | %-15s | %-10s |%n";
+        String columnFormat = "| %-15s | %-25s | %-25s | %-15s | %-10s |%n";
 
         System.out.println("-".repeat(DISPLAY_STROKE_LENGTH));
         System.out.printf(columnFormat, "ACC NO", "CUSTOMER NAME", "TYPE", "BALANCE", "STATUS");
@@ -88,44 +98,62 @@ public class DisplayUtil {
 
     private static void displayCheckingAccountRow(CheckingAccount account, String columnFormat) {
         String accountNumber = account.getAccountNumber();
-        String overDraftLimit = displayDecimal(account.getOverDraftLimit());
+        String overDraftLimit = displayAmount(account.getOverDraftLimit());
         String customerName = account.getCustomer().getName();
         String accountType = account.getAccountType();
         String monthlyFee = displayAmount(account.getMonthlyFee());
         String balance = displayAmount(account.getBalance());
-        String status = account.getStatus();
+        String status = formatStatus(account.getStatus());
 
-        String customerDetails = customerName + "\n" + overDraftLimit;
-        String typeDetails = accountType + "\n" + monthlyFee;
+        System.out.printf(columnFormat, accountNumber, customerName, accountType, balance, status);
 
-        System.out.printf(columnFormat, accountNumber, customerDetails, typeDetails, balance, status);
+        // Display additional details in the next line of the same row for overdraft and monthly fee
+        // in order to prevent the use of \n in the main row which would misalign the table
+        String overDraftDisplay = "Overdraft Limit: " + overDraftLimit;
+        String monthlyFeeDisplay = "Monthly Fee: " + monthlyFee;
+        System.out.printf(columnFormat, "", overDraftDisplay, monthlyFeeDisplay, "", "");
     }
 
     private static void displaySavingsAccountRow(SavingsAccount account, String columnFormat) {
+        float interestPercentage = calculateInterestPercentage(account.getInterestRate());
+
         String accountNumber = account.getAccountNumber();
-        String interestRate = displayDecimal(account.getInterestRate());
+        String interestRate = displayDecimal(interestPercentage);
         String customerName = account.getCustomer().getName();
         String accountType = account.getAccountType();
         String minimumBalance = displayAmount(account.getMinimumBalance());
         String balance = displayAmount(account.getBalance());
-        String status = account.getStatus();
+        String status = formatStatus(account.getStatus());
 
-        String customerDetails = customerName + "\n" + "Interest Rate" + interestRate;
-        String typeDetails = accountType + "\n" + "Min Balance: " + minimumBalance;
+        System.out.printf(columnFormat, accountNumber, customerName, accountType, balance, status);
 
-        System.out.printf(columnFormat, accountNumber, customerDetails, typeDetails, balance, status);
+        // Display additional details in the next line of the same row for interest rate and min balance
+        // in order to prevent the use of \n in the main row which would misalign the table
+        String interestRateDisplay = "Interest Rate: " + interestRate;
+        String minimumBalanceDisplay = "Min Balance: " + minimumBalance;
+        System.out.printf(columnFormat, "", interestRateDisplay, minimumBalanceDisplay, "", "");
     }
 
     public static void displayTransaction(Transaction transaction) {
-        double previousAccountBalance = transaction.getBalanceAfter() - transaction.getAmount();
+        double previousAccountBalance = computePreviousBalance(transaction);
 
         System.out.println("Transaction ID: " + transaction.getTransactionId());
         System.out.println("Account: " + transaction.getAccountNumber());
         System.out.println("Type: " + transaction.getTransactionType());
-        System.out.println("Amount: " + transaction.getAmount());
+        System.out.println("Amount: " + displayAmount(transaction.getAmount()));
         System.out.println("Previous Balance: " + displayAmount(previousAccountBalance));
         System.out.println("New Balance: " + displayAmount(transaction.getBalanceAfter()));
         System.out.println("Date/Time: " + displayTimestamp(transaction.getTimestamp()));
+    }
+
+    private static double computePreviousBalance (Transaction transaction) {
+        if ("withdraw".equals(transaction.getTransactionType())) {
+            return transaction.getBalanceAfter() + transaction.getAmount();
+        } else if ("deposit".equals(transaction.getTransactionType())) {
+            return transaction.getBalanceAfter() - transaction.getAmount();
+        } else {
+            return 0;
+        }
     }
 
     public static void displayMultipleTransactions(Transaction[] transactions) {
@@ -137,7 +165,7 @@ public class DisplayUtil {
 
         for (Transaction transaction : transactions) {
             String dateTime = displayTimestamp(transaction.getTimestamp());
-            String type = transaction.getTransactionType();
+            String type = transaction.getTransactionType().toUpperCase();
 
             String amountSign = type.equalsIgnoreCase("Deposit") ? "+" : "-";
             String amount = amountSign + displayAmount(transaction.getAmount());
@@ -159,6 +187,7 @@ public class DisplayUtil {
         System.out.println("-".repeat(DISPLAY_STROKE_LENGTH));
         System.out.println(message);
         System.out.println("-".repeat(DISPLAY_STROKE_LENGTH));
+        System.out.println();
     }
 
     public static  void displayHeading(String title) {

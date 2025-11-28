@@ -67,10 +67,10 @@ public class SavingsAccount extends Account implements Transactable {
     }
 
     public double getInterestRate() {
-        return interestRate;
+        return this.interestRate;
     }
 
     public double getMinimumBalance() {
-        return minimumBalance;
+        return this.minimumBalance;
     }
 }
