@@ -30,6 +30,9 @@ public class Main {
                 case 3:
                     handleTransactionFlow(scanner, bankingService);
                     break;
+                case 4:
+                    handleTransactionListingFlow(scanner, bankingService);
+                    break;
                 case 5:
                     userIsActive = false;
                     break;
@@ -252,4 +255,37 @@ public class Main {
         }
     }
 
+    public static void handleTransactionListingFlow(Scanner scanner, BankingService service) {
+        DisplayUtil.displayHeading("View Transaction history");
+
+        String accountNumber = readNonEmptyString(scanner, "Enter Account Number");
+
+        Account customerAccount = service.getAccountByNumber(accountNumber);
+
+        DisplayUtil.displayAccountDetails(customerAccount);
+
+        Transaction[] customerTransactions = service.getTransactionsByAccount(accountNumber);
+
+        if (customerTransactions.length == 0) {
+            DisplayUtil.displayNotice("No transactions recorded for this account.");
+        } else {
+            DisplayUtil.displayMultipleTransactions(customerTransactions);
+            displayTransactionTotals(customerTransactions, service);
+        }
+    }
+
+    private static void displayTransactionTotals(Transaction[] transactions, BankingService service) {
+        String accountNumber = transactions[0].getAccountNumber();
+
+        double totalDeposits = service.getTotalDeposit(accountNumber);
+        double totalWithdrawals = service.getTotalWithdrawals(accountNumber);
+
+        double netChange = totalDeposits - totalWithdrawals;
+        char netChangeSign = netChange >= 0 ? '+' : '-';
+
+        System.out.println("Total Transactions: " + transactions.length);
+        System.out.println("Total Deposits: " + DisplayUtil.displayAmount(totalDeposits));
+        System.out.println("Total Withdrawals: " + DisplayUtil.displayAmount(totalWithdrawals));
+        System.out.println("Net Change: " + netChangeSign + DisplayUtil.displayAmount(netChange));
+    }
 }
