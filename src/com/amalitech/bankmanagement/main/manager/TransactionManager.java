@@ -26,6 +26,7 @@ public class TransactionManager {
 
     public Transaction[] viewTransactionsByAccount(String accountNumber) {
         return Arrays.stream(transactions)
+                .filter(Objects::nonNull)
                 .filter(transaction -> Objects.equals(transaction.getAccountNumber(), accountNumber))
                 .toArray(Transaction[]::new);
     }
@@ -33,6 +34,7 @@ public class TransactionManager {
     public double calculateTotalDeposits(String accountNumber) {
         String transactionType = "deposit";
         return Arrays.stream(transactions, 0, this.transactionCount)
+                .filter(Objects::nonNull)
                 .filter(transaction -> Objects.equals(transaction.getAccountNumber(), accountNumber))
                 .filter(transaction -> Objects.equals(transaction.getTransactionType(), transactionType))
                 .mapToDouble(Transaction::getAmount)
@@ -42,6 +44,7 @@ public class TransactionManager {
     public double calculateTotalWithdrawals(String accountNumber) {
         String transactionType = "withdraw";
         return Arrays.stream(transactions, 0, this.transactionCount)
+                .filter(Objects::nonNull)
                 .filter(transaction -> Objects.equals(transaction.getAccountNumber(), accountNumber))
                 .filter(transaction -> Objects.equals(transaction.getTransactionType(), transactionType))
                 .mapToDouble(Transaction::getAmount)
