@@ -40,10 +40,14 @@ public class DataSeeder {
     }
 
     private void createSavingsAccount(Customer customer, double initialDeposit) {
-        bankingService.createSavingsAccount(customer, initialDeposit);
+        var account = bankingService.createSavingsAccount(customer);
+        var transaction = bankingService.processDeposit(account, initialDeposit);
+        bankingService.confirmTransaction(account, transaction);
     }
 
     private void createCheckingAccount(Customer customer, double initialDeposit) {
-        bankingService.createCheckingAccount(customer, initialDeposit);
+        var account = bankingService.createCheckingAccount(customer);
+        var transaction = bankingService.processDeposit(account, initialDeposit);
+        bankingService.confirmTransaction(account, transaction);
     }
 }

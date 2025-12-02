@@ -2,6 +2,7 @@ package com.amalitech.bankmanagement.main;
 
 import com.amalitech.bankmanagement.main.base.Account;
 import com.amalitech.bankmanagement.main.base.Customer;
+import com.amalitech.bankmanagement.main.config.AppConfig;
 import com.amalitech.bankmanagement.main.domain.*;
 import com.amalitech.bankmanagement.main.manager.AccountManager;
 import com.amalitech.bankmanagement.main.manager.TransactionManager;
@@ -106,16 +107,44 @@ public class TerminalApplication {
     private static Account createAccountFlow(Customer customer) {
         int accountType = readInt("Select type (1-2)", 1, 2);
 
-        double initialDeposit = readDouble("Enter initial deposit amount", 0);
+        double initialDeposit = getInitialDeposit(customer, accountType);
 
-        Account newAccount;
-        if(accountType == 1) {
-            newAccount = BANKING_SERVICE.createSavingsAccount(customer, initialDeposit);
-        } else {
-            newAccount = BANKING_SERVICE.createCheckingAccount(customer, initialDeposit);
-        }
+        Account newAccount = switch (accountType) {
+            case 1 -> BANKING_SERVICE.createSavingsAccount(customer);
+            case 2 -> BANKING_SERVICE.createCheckingAccount(customer);
+            default -> throw new IllegalArgumentException("Invalid account type");
+        };
+
+        // record initial deposit as a transaction for audit
+        Transaction firstTransaction = BANKING_SERVICE.processDeposit(newAccount, initialDeposit);
+        BANKING_SERVICE.confirmTransaction(newAccount, firstTransaction);
 
         return newAccount;
+    }
+
+    /// Retrieve the initial allowed deposit for an account
+    /// initial deposit > minimum deposit amount
+    private static double getInitialDeposit(Customer customer, int accountType) {
+        double initialDeposit;
+        double minimumDeposit = getMinimumDeposit(customer, accountType);
+
+        do {
+            initialDeposit = readDouble("Enter initial deposit amount (minimum GHS " + minimumDeposit + ")", 0);
+            if (initialDeposit < minimumDeposit) {
+                System.out.println("Initial deposit must be at least $ " + minimumDeposit);
+            }
+        } while (initialDeposit < minimumDeposit);
+
+        return initialDeposit;
+    }
+
+    private static double getMinimumDeposit(Customer customer, int accountType) {
+        if ("Premium".equals(customer.getCustomerType())) {
+            return AppConfig.MINIMUM_INITIAL_DEPOSIT_PREMIUM;
+        }
+        return (accountType == 1)
+                ? AppConfig.MINIMUM_INITIAL_DEPOSIT_SAVINGS
+                : AppConfig.MINIMUM_INITIAL_DEPOSIT_CHECKING;
     }
 
     private static void showUserAccount(Account account) {

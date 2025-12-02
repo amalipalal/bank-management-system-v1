@@ -28,6 +28,7 @@ public class BankingService {
         return new Transaction("withdraw", account.getAccountNumber(), amount, balanceAfterTransaction);
     }
 
+    ///  Updates the bank account balance and adds transaction to transaction store
     public boolean confirmTransaction(Account account, Transaction transaction) {
         if ("withdraw".equals(transaction.getTransactionType())) {
             account.withdraw(transaction.getAmount());
@@ -36,19 +37,21 @@ public class BankingService {
         }
 
         // Record the transaction only after successful account update
-        transactionManager.addTransaction(transaction);
+        this.transactionManager.addTransaction(transaction);
 
         return true;
     }
 
-    public Account createSavingsAccount(Customer customer, double initialDeposit) {
-        SavingsAccount newAccount = new SavingsAccount(customer, initialDeposit, "active");
+    public Account createSavingsAccount(Customer customer) {
+        // Account object's initial deposit will be processed as a transaction
+        SavingsAccount newAccount = new SavingsAccount(customer, 0, "active");
         accountManager.addAccount(newAccount);
         return newAccount;
     }
 
-    public Account createCheckingAccount(Customer customer, double initialDeposit) {
-        CheckingAccount newAccount = new CheckingAccount(customer, initialDeposit, "active");
+    public Account createCheckingAccount(Customer customer) {
+        // Account object's initial deposit will be processed as a transaction
+        CheckingAccount newAccount = new CheckingAccount(customer, 0, "active");
 
         if(customer instanceof PremiumCustomer) newAccount.setMonthlyFee(0);
 

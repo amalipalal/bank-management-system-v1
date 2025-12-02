@@ -14,3 +14,4 @@ src/com/amalitech/bankmanagement/main/util/DataSeeder.java
 src/com/amalitech/bankmanagement/main/util/DisplayUtil.java
 src/com/amalitech/bankmanagement/main/TerminalApplication.java
 src/com/amalitech/bankmanagement/main/util/ValidationUtil.java
+src/com/amalitech/bankmanagement/main/config/AppConfig.java
